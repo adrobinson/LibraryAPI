@@ -1,4 +1,6 @@
-package com.example.Library;
+package com.example.Library.Book;
+import com.example.Library.Author.Author;
+import com.example.Library.Review.Review;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
