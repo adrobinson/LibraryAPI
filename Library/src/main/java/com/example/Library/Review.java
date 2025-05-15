@@ -2,6 +2,7 @@ package com.example.Library;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,10 @@ public class Review {
     private LocalDateTime createdAt = LocalDateTime.now();
     @ManyToOne
     @JoinColumn(name = "book_id")
+    @NotNull
     private Book book;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 }

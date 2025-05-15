@@ -1,6 +1,7 @@
 package com.example.Library;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,10 @@ public class Author {
     @Id
     @GeneratedValue
     private Integer id;
+    @NotBlank
     private String name;
     private LocalDateTime birthDate;
+    @OneToMany(mappedBy = "author")
+    @JsonManagedReference
+    private List<Book> books;
 }

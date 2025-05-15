@@ -28,9 +28,13 @@ public class User {
     private String email;
     @NotBlank
     private String role;
-    @OneToMany
-    @JoinColumn(name = "book_list")
+    @ManyToMany
+    @JoinTable(
+            name = "user_book_list",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
     private List<Book> books;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 }
