@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Table(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,8 @@ public class User {
     private String email;
     @NotBlank
     private String role;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany
+    @JoinColumn(name = "book_list")
     private List<Book> books;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;

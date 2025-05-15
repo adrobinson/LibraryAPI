@@ -20,7 +20,4 @@ public class Author {
     private Integer id;
     private String name;
     private LocalDateTime birthDate;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Book> bookList;
 }
