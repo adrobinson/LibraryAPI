@@ -1,6 +1,4 @@
-package com.example.Library.Review;
-import com.example.Library.Book.Book;
-import com.example.Library.User.User;
+package com.example.Library.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

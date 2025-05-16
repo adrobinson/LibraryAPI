@@ -1,5 +1,4 @@
-package com.example.Library.Author;
-import com.example.Library.Book.Book;
+package com.example.Library.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

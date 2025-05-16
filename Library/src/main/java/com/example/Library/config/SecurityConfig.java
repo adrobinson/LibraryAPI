@@ -1,4 +1,4 @@
-package com.example.Library;
+package com.example.Library.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/register").permitAll()
+                        .requestMatchers("/user/register", "/login").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

@@ -1,6 +1,6 @@
-package com.example.Library.User;
-import com.example.Library.Book.Book;
-import com.example.Library.Review.Review;
+package com.example.Library.entity;
+import com.example.Library.entity.Book;
+import com.example.Library.entity.Review;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -23,11 +23,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotBlank
+    @Column(unique = true)
     private String username;
     @NotBlank
     private String password;
     @NotBlank
     @Email
+    @Column(unique = true)
     private String email;
     @NotBlank
     private String role;
