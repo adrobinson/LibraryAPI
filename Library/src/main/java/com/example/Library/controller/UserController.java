@@ -10,10 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,10 +32,17 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
-    @PreAuthorize("hasRole{'USER'}")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/all")
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{user-id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("user-id") Integer id){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
+
     }
 
 

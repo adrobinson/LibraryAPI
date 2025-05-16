@@ -2,6 +2,7 @@ package com.example.Library.service;
 
 import com.example.Library.dto.UserRegistrationDto;
 import com.example.Library.dto.UserResponseDto;
+import com.example.Library.entity.User;
 import com.example.Library.exception.CredentialsAlreadyExistException;
 import com.example.Library.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Library.jwt.JwtUtil;
@@ -57,6 +59,13 @@ public class UserService {
                 .stream()
                 .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
+    }
+
+    public UserResponseDto deleteUser(Integer id){
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        repository.delete(user);
+        return userMapper.toUserResponse(user);
     }
 
 }
