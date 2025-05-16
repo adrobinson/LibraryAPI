@@ -18,9 +18,6 @@ public class UserController {
 
     private UserService userService;
 
-    //TODO move logic to user service, create response dto
-
-
     @PostMapping("/user/register")
     public UserResponseDto registerUser(@Valid @RequestBody UserRegistrationDto dto){
         return userService.saveUser(dto);

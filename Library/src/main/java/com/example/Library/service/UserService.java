@@ -3,6 +3,7 @@ package com.example.Library.service;
 import com.example.Library.dto.UserRegistrationDto;
 import com.example.Library.dto.UserResponseDto;
 import com.example.Library.entity.User;
+import com.example.Library.exception.CredentialsAlreadyExistException;
 import com.example.Library.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,6 +21,13 @@ public class UserService {
 
 
     public UserResponseDto saveUser(UserRegistrationDto dto){
+
+        if(repository.existsByEmail(dto.email)){
+            throw new CredentialsAlreadyExistException("Email already exists");
+        } else if(repository.existsByUsername(dto.username)){
+            throw new CredentialsAlreadyExistException("Username already exists");
+        }
+
         String encodedPassword = passwordEncoder.encode(dto.password);
         var user = userMapper.mapRegisterToUser(dto);
         user.setPassword(encodedPassword);

@@ -1,5 +1,6 @@
 package com.example.Library.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,11 +30,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exp){
-        return new ResponseEntity<>(exp.getMessage(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(exp.getMessage(), HttpStatus.UNAUTHORIZED) ;
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> HandleBadCredentialsException(BadCredentialsException exp){
         return new ResponseEntity<>(exp.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(CredentialsAlreadyExistException.class)
+    public ResponseEntity<?> HandleCredentialsAlreadyExistException(CredentialsAlreadyExistException exp){
+        return new ResponseEntity<>(exp.getMessage(), HttpStatus.CONFLICT);
     }
 }
