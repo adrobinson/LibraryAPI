@@ -8,3 +8,6 @@ spring:
     hibernate:
       ddl-auto: create-drop
     database: postgresql
+
+jwt:
+  secret: dGhpc0lzQVNlY3JldEtleVRvR2VuZXJhdGVUb2tlbnM=

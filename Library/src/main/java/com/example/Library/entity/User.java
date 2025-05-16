@@ -1,6 +1,4 @@
 package com.example.Library.entity;
-import com.example.Library.entity.Book;
-import com.example.Library.entity.Review;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -45,3 +43,4 @@ public class User {
     @JsonIgnore
     private List<Review> reviews;
 }
+
