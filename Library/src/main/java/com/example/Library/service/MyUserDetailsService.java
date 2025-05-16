@@ -19,13 +19,13 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        User user = userRepository.findByUsernameOrEmail(identifier, identifier)
+        User user = userRepository.findByUsernameOrEmail(identifier, identifier) // verify user exists in the database
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new org.springframework.security.core.userdetails.User( // Creates a User object from Spring Security, this will be used for user authentication/lookups
                 user.getUsername(),
                 user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole()))
+                List.of(new SimpleGrantedAuthority(user.getRole())) // wraps the role into 'GrantedAuthority', so Spring Security can authorize based on this value
         );
 
     }
