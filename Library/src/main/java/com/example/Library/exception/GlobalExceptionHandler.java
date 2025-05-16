@@ -1,5 +1,7 @@
 package com.example.Library.exception;
 
+import io.jsonwebtoken.JwtException;
+import org.apache.coyote.Response;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,5 +44,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CredentialsAlreadyExistException.class)
     public ResponseEntity<?> HandleCredentialsAlreadyExistException(CredentialsAlreadyExistException exp){
         return new ResponseEntity<>(exp.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<?> HandleJwtException(JwtException exp) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", exp.getMessage()));
     }
 }

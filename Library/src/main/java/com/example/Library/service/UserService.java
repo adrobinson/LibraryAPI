@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Library.jwt.JwtUtil;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -47,6 +50,13 @@ public class UserService {
         String token = jwtUtil.generateToken((UserDetails) auth.getPrincipal());
 
         return token;
+    }
+
+    public List<UserResponseDto> findAllUsers(){
+        return repository.findAll()
+                .stream()
+                .map(userMapper::toUserResponse)
+                .collect(Collectors.toList());
     }
 
 }
