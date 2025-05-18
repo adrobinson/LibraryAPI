@@ -12,8 +12,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -50,5 +52,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> HandleJwtException(JwtException exp) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", exp.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<?> HandleNoSuchElementException(NoSuchElementException exp) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMessage());
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<?> HandleRoleNotFoundException(RoleNotFoundException exp){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMessage());
     }
 }
