@@ -23,7 +23,7 @@ public class LibraryApplication {
 				admin.setUsername("admin");
 				admin.setPassword(encoder.encode("admin123"));
 				admin.setEmail("admin@mail.com");
-				admin.setRole("ADMIN");
+				admin.setRole("ROLE_ADMIN");
 				repository.save(admin);
 			}
 		};

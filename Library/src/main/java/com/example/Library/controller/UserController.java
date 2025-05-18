@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @RestController
 public class UserController {
@@ -32,13 +30,13 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')") // TODO make this work and also add role hierarchy
     @GetMapping("/users/all")
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/users/{user-id}")
     public ResponseEntity<?> deleteUser(@PathVariable("user-id") Integer id){
         return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
