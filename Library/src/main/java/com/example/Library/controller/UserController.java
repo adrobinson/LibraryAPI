@@ -1,10 +1,7 @@
 package com.example.Library.controller;
 
 
-import com.example.Library.dto.UpdateRoleRequest;
-import com.example.Library.dto.UserLoginDto;
-import com.example.Library.dto.UserRegistrationDto;
-import com.example.Library.dto.UserResponseDto;
+import com.example.Library.dto.user.*;
 import com.example.Library.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,6 +18,8 @@ public class UserController {
 
     private UserService userService;
 
+    // Public Endpoints
+
     @PostMapping("/user/register")
     public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserRegistrationDto dto){
         UserResponseDto repsonse = userService.saveUser(dto);
@@ -33,17 +32,27 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // TODO make this work and also add role hierarchy
+    // Admin Endpoints
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PatchMapping("/admin/password")
+    public ResponseEntity<String> updateAdminPassword(@Valid @RequestBody UpdatePasswordRequest request){
+        userService.updateAdminPassword(request);
+        return ResponseEntity.ok()
+                .body("Password updated");
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users/all")
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // TODO make this work and also add role hierarchy
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users/{user-id}")
     public ResponseEntity<?> getUserById(@PathVariable("user-id") Integer id) { return ResponseEntity.ok(userService.findUserById(id));}
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // TODO make this work and also add role hierarchy
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/users/{user-id}/role")
     public ResponseEntity<?> updateUserRole(
             @PathVariable ("user-id") Integer id,
@@ -57,6 +66,29 @@ public class UserController {
     @DeleteMapping("/users/{user-id}")
     public ResponseEntity<?> deleteUser(@PathVariable("user-id") Integer id){
         return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
+    }
+
+    // User Endpoints
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/users/me")
+    public ResponseEntity<UserResponseDto> getCurrentUser(){
+        return ResponseEntity.ok(userService.getCurrent());
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PatchMapping("/users/me/username")
+    public ResponseEntity<?> updateDetails(@Valid @RequestBody UpdateDetailsRequest request){
+        var response = userService.updateDetails(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/users/me")
+    public ResponseEntity<?> deleteCurrentUser(){
+        var response = userService.deleteCurrent();
+        return ResponseEntity.ok()
+                .body(response);
     }
 
 

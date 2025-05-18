@@ -1,4 +1,4 @@
-package com.example.Library.dto;
+package com.example.Library.dto.user;
 
 public class UserResponseDto {
     public String username;
