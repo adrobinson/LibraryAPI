@@ -19,9 +19,6 @@ public class AuthorMapper {
         AuthorResponseDto dto = new AuthorResponseDto();
         dto.name = author.getName();
         dto.birthDate = author.getBirthDate();
-        if(author.getBooks() != null){
-            dto.bookList = author.getBooks();
-        }
         return dto;
     }
 

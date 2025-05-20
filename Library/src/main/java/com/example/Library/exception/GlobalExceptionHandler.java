@@ -101,4 +101,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Invalid request body", HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> HandleDataIntegrityViolationException(DataIntegrityViolationException exp){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exp.getMessage());
+    }
+
 }

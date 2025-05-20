@@ -9,6 +9,5 @@ public class AuthorResponseDto {
 
     public String name;
     public LocalDate birthDate;
-    public List<Book> bookList;
 
 }
