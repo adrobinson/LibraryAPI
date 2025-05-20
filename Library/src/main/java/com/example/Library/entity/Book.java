@@ -1,14 +1,16 @@
 package com.example.Library.entity;
+import com.example.Library.enums.Genre;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -21,10 +23,12 @@ public class Book {
     @Id
     @GeneratedValue
     private Integer id;
-    @NotBlank
+    @NotNull
     private String title;
-    private LocalDateTime published;
-    private String genre;
+    @NotNull
+    private LocalDate published;
+    @NotNull
+    private Genre genre;
     @ManyToOne
     @JoinColumn(name = "author_id")
     @JsonBackReference
