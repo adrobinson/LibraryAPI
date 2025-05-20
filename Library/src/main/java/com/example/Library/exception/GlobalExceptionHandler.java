@@ -1,10 +1,12 @@
 package com.example.Library.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import io.jsonwebtoken.JwtException;
 import org.apache.coyote.Response;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.management.relation.RoleNotFoundException;
 import java.rmi.AccessException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -80,6 +83,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> HandleAccessDeniedException(AccessDeniedException exp){
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(exp.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleInvalidFormat(HttpMessageNotReadableException exp) {
+        if (exp.getCause() instanceof InvalidFormatException) {
+            InvalidFormatException ife = (InvalidFormatException) exp.getCause();
+
+            if (ife.getTargetType().equals(LocalDate.class)) {
+                return new ResponseEntity<>(
+                        "birth-date must be in format dd-mm-yyyy",
+                        HttpStatus.BAD_REQUEST
+                );
+            }
+        }
+
+        return new ResponseEntity<>("Invalid request body", HttpStatus.BAD_REQUEST);
     }
 
 }
