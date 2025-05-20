@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class Author {
     private Integer id;
     @NotBlank
     private String name;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     @OneToMany(mappedBy = "author")
     @JsonManagedReference
     private List<Book> books;
