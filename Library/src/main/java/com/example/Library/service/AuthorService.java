@@ -25,7 +25,7 @@ public class AuthorService {
     AuthorRepository repository;
 
     public AuthorResponseDto saveAuthor(AuthorDto dto){
-        var exisiting = repository.findByNameAndBirthDate(dto.name, dto.birthDate); // Two authors may have same name, DB does not accept two authors with same name AND birthdate
+        var exisiting = repository.findByNameAndBirthDate((dto.name).toLowerCase(), dto.birthDate); // Two authors may have same name, DB does not accept two authors with same name AND birthdate
         if(exisiting.isPresent()){
             throw new DataIntegrityViolationException("This author already exists");
         }
@@ -56,7 +56,7 @@ public class AuthorService {
     }
 
     public List<AuthorResponseDto> searchByName(String name){
-        List<Author> results = repository.findByNameContainingIgnoreCase(name);
+        List<Author> results = repository.findByNameContainingIgnoreCase((name).toLowerCase());
         return results.stream()
                 .map(authorMapper::mapAuthorToResponse)
                 .collect(Collectors.toList());

@@ -10,7 +10,7 @@ public class UserMapper {
 
     public User mapRegisterToUser(UserRegistrationDto dto){
         var user= new User();
-        user.setUsername((dto.username).toLowerCase());
+        user.setUsername((dto.username).toLowerCase().trim());
         user.setPassword(dto.password);
         user.setEmail((dto.email).toLowerCase());
         user.setRole("ROLE_USER");

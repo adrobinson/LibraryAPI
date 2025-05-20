@@ -10,14 +10,14 @@ public class AuthorMapper {
 
     public Author mapDtoToAuthor(AuthorDto dto){
         Author author = new Author();
-        author.setName(dto.name);
+        author.setName((dto.name).toLowerCase().trim());
         author.setBirthDate(dto.birthDate);
         return author;
     }
 
     public AuthorResponseDto mapAuthorToResponse(Author author){
         AuthorResponseDto dto = new AuthorResponseDto();
-        dto.name = author.getName();
+        dto.name = author.getName().toLowerCase();
         dto.birthDate = author.getBirthDate();
         return dto;
     }

@@ -20,7 +20,7 @@ public class BookService {
     private final AuthorRepository authorRepository;
 
     public BookResponseDto saveBook(BookDto dto){
-        var author = authorRepository.findByName(dto.author)
+        var author = authorRepository.findByName((dto.author).toLowerCase())
                 .orElseThrow(() -> new NoSuchElementException("No author of name: " + dto.author));
 
         var exists = bookRepository.findBookByTitleAndAuthor(dto.title, author);

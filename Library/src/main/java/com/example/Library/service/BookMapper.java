@@ -11,7 +11,7 @@ public class BookMapper {
 
     public Book mapToBook(BookDto dto, Author author){
         Book book = new Book();
-        book.setTitle((dto.title).toLowerCase());
+        book.setTitle((dto.title).toLowerCase().trim());
         book.setGenre(dto.genre);
         book.setAuthor(author);
         book.setPublished(dto.published);

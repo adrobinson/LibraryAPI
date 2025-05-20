@@ -41,7 +41,7 @@ public class UserService {
 
 
     public UserResponseDto saveUser(UserRegistrationDto dto){
-        if(repository.existsByEmail(dto.email)){
+        if(repository.existsByEmail((dto.email).toLowerCase())){
             throw new CredentialsAlreadyExistException("Email already exists");
         } else if(repository.existsByUsername(dto.username)){
             throw new CredentialsAlreadyExistException("Username already exists");
