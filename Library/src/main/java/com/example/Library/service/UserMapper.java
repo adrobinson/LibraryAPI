@@ -12,7 +12,7 @@ public class UserMapper {
         var user= new User();
         user.setUsername((dto.username).toLowerCase());
         user.setPassword(dto.password);
-        user.setEmail(dto.email);
+        user.setEmail((dto.email).toLowerCase());
         user.setRole("ROLE_USER");
         return user;
     }

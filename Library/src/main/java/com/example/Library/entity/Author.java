@@ -25,4 +25,8 @@ public class Author {
     @OneToMany(mappedBy = "author")
     @JsonManagedReference
     private List<Book> books;
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
 }
