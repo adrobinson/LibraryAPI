@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PatchMapping("/users/me/username")
+    @PatchMapping("/users/me")
     public ResponseEntity<?> updateDetails(@Valid @RequestBody UpdateDetailsRequest request){
         var response = userService.updateDetails(request);
         return ResponseEntity.ok(response);

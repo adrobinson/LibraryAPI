@@ -13,6 +13,7 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     Optional<Author> findByName(String name);
 
     List<Author> findByNameContainingIgnoreCase(String name);
+    boolean existsAuthorByName(String name);
 
 
 

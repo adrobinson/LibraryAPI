@@ -4,21 +4,22 @@ package com.example.Library.controller;
 import com.example.Library.dto.PaginatedResponse;
 import com.example.Library.dto.author.AuthorDto;
 import com.example.Library.dto.author.AuthorResponseDto;
+import com.example.Library.dto.author.UpdateAuthorDto;
 import com.example.Library.service.AuthorMapper;
 import com.example.Library.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
 public class AuthorController {
 
     private final AuthorService authorService;
-    private final AuthorMapper authorMapper;
 
     // Admin Endpoints
 
@@ -34,6 +35,13 @@ public class AuthorController {
     public ResponseEntity<?> deleteAuthor(@PathVariable("author-id") Integer id) {
         var response = authorService.deleteAuthor(id);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PatchMapping("/author/{author-id}")
+    public ResponseEntity<List<String>> updateAuthor(@PathVariable("author-id") Integer id,
+                                                          @RequestBody UpdateAuthorDto dto){
+        return ResponseEntity.ok(authorService.updateAuthor(id, dto));
     }
 
     // User Endpoints
