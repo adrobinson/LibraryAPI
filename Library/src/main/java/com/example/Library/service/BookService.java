@@ -41,6 +41,14 @@ public class BookService {
 
     }
 
+    public BookResponseDto deleteBook(Integer id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No book of id: " + id));
+
+        bookRepository.delete(book);
+        return(bookMapper.toBookResponse(book));
+    }
+
     public List<BookResponseDto> getAllBooks(){
         return bookRepository.findAll()
                 .stream()

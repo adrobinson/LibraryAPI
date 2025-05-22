@@ -26,6 +26,12 @@ public class BookController {
         return ResponseEntity.ok(bookService.saveBook(dto));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/book/{book-id}")
+    public ResponseEntity<BookResponseDto> deleteBook(@PathVariable("book-id") Integer id) {
+        return ResponseEntity.ok(bookService.deleteBook(id));
+    }
+
     // User Endpoints
 
     @PreAuthorize("hasRole('USER')")

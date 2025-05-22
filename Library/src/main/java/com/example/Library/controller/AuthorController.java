@@ -40,7 +40,7 @@ public class AuthorController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/author/{author-id}")
     public ResponseEntity<List<String>> updateAuthor(@PathVariable("author-id") Integer id,
-                                                          @RequestBody UpdateAuthorDto dto){
+                                                          @Valid @RequestBody UpdateAuthorDto dto){
         return ResponseEntity.ok(authorService.updateAuthor(id, dto));
     }
 
