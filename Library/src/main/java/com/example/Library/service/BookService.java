@@ -42,8 +42,7 @@ public class BookService {
     }
 
     public BookResponseDto deleteBook(Integer id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No book of id: " + id));
+        Book book = findBookById(id);
 
         bookRepository.delete(book);
         return(bookMapper.toBookResponse(book));
@@ -57,8 +56,7 @@ public class BookService {
     }
 
     public BookResponseDto getBookById(Integer id){
-        var book = bookRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No book of id: " + id));
+        var book = findBookById(id);
         return bookMapper.toBookResponse(book);
     }
 
@@ -75,6 +73,16 @@ public class BookService {
         Page<BookResponseDto> bookPage = bookRepository.findAll(pageable)
                 .map(bookMapper::toBookResponse);
         return new PaginatedResponse<>(bookPage);
+    }
+
+    public Book findBookById(Integer id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No book with ID: " + id));
+    }
+
+    public Book findBookByTitle(String title) {
+        return bookRepository.findBookByTitle(title.toLowerCase().trim())
+                .orElseThrow(() -> new NoSuchElementException("No book with title: " + title));
     }
 
 }

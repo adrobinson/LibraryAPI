@@ -1,11 +1,15 @@
 package com.example.Library.service;
 
+import com.example.Library.dto.book.BookRequestDto;
+import com.example.Library.dto.book.UserBookListDto;
 import com.example.Library.dto.user.UpdateDetailsRequest;
 import com.example.Library.dto.user.UpdatePasswordRequest;
 import com.example.Library.dto.user.UserRegistrationDto;
 import com.example.Library.dto.user.UserResponseDto;
+import com.example.Library.entity.Book;
 import com.example.Library.entity.User;
 import com.example.Library.exception.CredentialsAlreadyExistException;
+import com.example.Library.repository.BookRepository;
 import com.example.Library.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -187,6 +191,52 @@ public class UserService {
         repository.delete(user);
         return dto;
     }
+
+    BookService bookService;
+
+    public UserBookListDto addToBookList(BookRequestDto dto){
+        User user = getCurrentUser();
+        boolean updated = false;
+
+        if(dto.bookId != null){
+            Book book = bookService.findBookById(dto.bookId);
+            user.addBook(book);
+            updated = true;
+        }
+
+        if(dto.bookIds != null && !dto.bookIds.isEmpty()){
+            for(Integer id: dto.bookIds){
+                Book book = bookService.findBookById(id);
+                user.addBook(book);
+            }
+            updated = true;
+        }
+
+        if(dto.bookTitle != null && !dto.bookTitle.trim().isEmpty()){
+            String normalizedTitle = dto.bookTitle.toLowerCase();
+            Book book = bookService.findBookByTitle(normalizedTitle);
+            user.addBook(book);
+            updated = true;
+        }
+
+        if(dto.bookTitles != null && !dto.bookTitles.isEmpty()){
+            for(String title: dto.bookTitles){
+                String normalizedTitle = title.toLowerCase();
+                Book book = bookService.findBookByTitle(normalizedTitle);
+                user.addBook(book);
+            }
+            updated = true;
+        }
+
+        if(!updated){
+            throw new IllegalArgumentException("No valid field provided, valid fields include:\nbookId : Integer id\nbookIds: [Integer id]\nbookTitle: String title\nbookTitles: [String titles]");
+        }
+
+        repository.save(user);
+        return userMapper.getUserBookList(user);
+
+    }
+
 
 
 }

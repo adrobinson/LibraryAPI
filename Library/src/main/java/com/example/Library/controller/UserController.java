@@ -1,6 +1,8 @@
 package com.example.Library.controller;
 
 
+import com.example.Library.dto.book.BookRequestDto;
+import com.example.Library.dto.book.UserBookListDto;
 import com.example.Library.dto.user.*;
 import com.example.Library.service.UserService;
 import jakarta.validation.Valid;
@@ -91,7 +93,11 @@ public class UserController {
                 .body(response);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/users/me/books")
+    public ResponseEntity<UserBookListDto> addToBookList(@RequestBody BookRequestDto dto){
+        return ResponseEntity.ok(userService.addToBookList(dto));
+    }
 
 
 }

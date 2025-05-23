@@ -1,5 +1,6 @@
 package com.example.Library.service;
 
+import com.example.Library.dto.book.UserBookListDto;
 import com.example.Library.dto.user.UserResponseDto;
 import com.example.Library.entity.User;
 import com.example.Library.dto.user.UserRegistrationDto;
@@ -22,5 +23,11 @@ public class UserMapper {
         userResponse.username = user.getUsername();
         userResponse.email = user.getEmail();
         return userResponse;
+    }
+
+    public UserBookListDto getUserBookList(User user){
+        UserBookListDto dto = new UserBookListDto();
+        dto.bookList = user.getBooks();
+        return dto;
     }
 }
