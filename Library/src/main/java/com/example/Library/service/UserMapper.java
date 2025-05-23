@@ -1,11 +1,20 @@
 package com.example.Library.service;
 
-import com.example.Library.dto.book.UserBookListDto;
+import com.example.Library.dto.book.BookResponseDto;
 import com.example.Library.dto.user.UserResponseDto;
+import com.example.Library.entity.Book;
 import com.example.Library.entity.User;
 import com.example.Library.dto.user.UserRegistrationDto;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@AllArgsConstructor
 @Service
 public class UserMapper {
 
@@ -25,9 +34,13 @@ public class UserMapper {
         return userResponse;
     }
 
-    public UserBookListDto getUserBookList(User user){
-        UserBookListDto dto = new UserBookListDto();
-        dto.bookList = user.getBooks();
-        return dto;
+    BookMapper bookMapper;
+
+    public List<BookResponseDto> getUserBookList(User user){
+
+        return user.getBooks()
+                .stream()
+                .map(bookMapper::toBookResponse)
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@ package com.example.Library.controller;
 
 
 import com.example.Library.dto.book.BookRequestDto;
-import com.example.Library.dto.book.UserBookListDto;
+import com.example.Library.dto.book.BookResponseDto;
 import com.example.Library.dto.user.*;
 import com.example.Library.service.UserService;
 import jakarta.validation.Valid;
@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -95,8 +96,14 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/users/me/books")
-    public ResponseEntity<UserBookListDto> addToBookList(@RequestBody BookRequestDto dto){
+    public ResponseEntity<List<BookResponseDto>> addToBookList(@RequestBody BookRequestDto dto){
         return ResponseEntity.ok(userService.addToBookList(dto));
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/users/me/books")
+    public ResponseEntity<List<BookResponseDto>> getBookList(){
+        return ResponseEntity.ok(userService.getBookListOfCurrent());
     }
 
 

@@ -1,7 +1,7 @@
 package com.example.Library.service;
 
 import com.example.Library.dto.book.BookRequestDto;
-import com.example.Library.dto.book.UserBookListDto;
+import com.example.Library.dto.book.BookResponseDto;
 import com.example.Library.dto.user.UpdateDetailsRequest;
 import com.example.Library.dto.user.UpdatePasswordRequest;
 import com.example.Library.dto.user.UserRegistrationDto;
@@ -9,11 +9,8 @@ import com.example.Library.dto.user.UserResponseDto;
 import com.example.Library.entity.Book;
 import com.example.Library.entity.User;
 import com.example.Library.exception.CredentialsAlreadyExistException;
-import com.example.Library.repository.BookRepository;
 import com.example.Library.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Library.jwt.JwtUtil;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.ArrayList;
@@ -194,7 +190,7 @@ public class UserService {
 
     BookService bookService;
 
-    public UserBookListDto addToBookList(BookRequestDto dto){
+    public List<BookResponseDto> addToBookList(BookRequestDto dto){
         User user = getCurrentUser();
         boolean updated = false;
 
@@ -237,6 +233,9 @@ public class UserService {
 
     }
 
-
+    public List<BookResponseDto> getBookListOfCurrent(){
+        User user = getCurrentUser();
+        return userMapper.getUserBookList(user);
+    }
 
 }

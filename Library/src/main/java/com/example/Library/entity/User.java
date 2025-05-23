@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,13 +46,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     @JsonIgnore
-    private Set<Book> books;
+    private Set<Book> books = new HashSet<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Review> reviews;
 
     public void addBook(Book book){
         books.add(book);
+    }
+    public Set<Book> getBooks() {
+        return books == null ? Collections.emptySet() : books;
     }
 }
 
