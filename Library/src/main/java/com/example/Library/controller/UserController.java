@@ -4,10 +4,10 @@ package com.example.Library.controller;
 import com.example.Library.dto.book.BookRequestDto;
 import com.example.Library.dto.book.BookResponseDto;
 import com.example.Library.dto.user.*;
+import com.example.Library.service.BookListService;
 import com.example.Library.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +21,7 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+    private final BookListService bookListService;
 
     // Public Endpoints
 
@@ -69,7 +70,8 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/users/{user-id}")
     public ResponseEntity<?> deleteUser(@PathVariable("user-id") Integer id){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
+        userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
 
     // User Endpoints
@@ -98,19 +100,19 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/users/me/books")
     public ResponseEntity<List<BookResponseDto>> addToBookList(@RequestBody BookRequestDto dto){
-        return ResponseEntity.ok(userService.addToBookList(dto));
+        return ResponseEntity.ok(bookListService.addToBookList(dto));
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/users/me/books")
     public ResponseEntity<List<BookResponseDto>> getBookList(){
-        return ResponseEntity.ok(userService.getBookListOfCurrent());
+        return ResponseEntity.ok(bookListService.getBookListOfCurrent());
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/users/me/books")
     public ResponseEntity<List<BookResponseDto>> removeBookFromList(@RequestBody BookRequestDto dto){
-        return ResponseEntity.ok(userService.removeFromBookList(dto));
+        return ResponseEntity.ok(bookListService.removeFromBookList(dto));
     }
 
 
