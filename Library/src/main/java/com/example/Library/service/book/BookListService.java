@@ -1,11 +1,12 @@
-package com.example.Library.service;
+package com.example.Library.service.book;
 
 import com.example.Library.dto.book.BookRequestDto;
 import com.example.Library.dto.book.BookResponseDto;
-import com.example.Library.dto.user.UserResponseDto;
 import com.example.Library.entity.Book;
 import com.example.Library.entity.User;
 import com.example.Library.repository.UserRepository;
+import com.example.Library.service.user.UserMapper;
+import com.example.Library.service.user.UserService;
 import com.example.Library.util.StringUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

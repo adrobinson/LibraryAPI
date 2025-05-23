@@ -1,4 +1,4 @@
-package com.example.Library.service;
+package com.example.Library.service.book;
 
 import com.example.Library.dto.PaginatedResponse;
 import com.example.Library.dto.book.BookDto;

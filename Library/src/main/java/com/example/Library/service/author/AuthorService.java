@@ -1,14 +1,12 @@
-package com.example.Library.service;
+package com.example.Library.service.author;
 
 import com.example.Library.dto.PaginatedResponse;
 import com.example.Library.dto.author.AuthorDto;
 import com.example.Library.dto.author.AuthorResponseDto;
 import com.example.Library.dto.author.UpdateAuthorDto;
 import com.example.Library.entity.Author;
-import com.example.Library.entity.Book;
 import com.example.Library.exception.CredentialsAlreadyExistException;
 import com.example.Library.repository.AuthorRepository;
-import com.example.Library.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;

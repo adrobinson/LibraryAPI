@@ -1,17 +1,14 @@
-package com.example.Library.service;
+package com.example.Library.service.user;
 
 import com.example.Library.dto.book.BookResponseDto;
 import com.example.Library.dto.user.UserResponseDto;
-import com.example.Library.entity.Book;
 import com.example.Library.entity.User;
 import com.example.Library.dto.user.UserRegistrationDto;
+import com.example.Library.service.book.BookMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

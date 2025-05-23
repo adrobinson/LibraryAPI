@@ -1,4 +1,4 @@
-package com.example.Library.service;
+package com.example.Library.service.author;
 
 import com.example.Library.dto.author.AuthorDto;
 import com.example.Library.dto.author.AuthorResponseDto;

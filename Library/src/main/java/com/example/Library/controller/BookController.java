@@ -3,7 +3,7 @@ package com.example.Library.controller;
 import com.example.Library.dto.PaginatedResponse;
 import com.example.Library.dto.book.BookDto;
 import com.example.Library.dto.book.BookResponseDto;
-import com.example.Library.service.BookService;
+import com.example.Library.service.book.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
