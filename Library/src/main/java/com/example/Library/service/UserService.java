@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import com.example.Library.jwt.JwtUtil;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -137,7 +134,7 @@ public class UserService {
         List<String> messages = new ArrayList<>();
 
         if(request.username != null && !request.username.isBlank()) {
-            String normalizedUsername = (request.username).toLowerCase().trim();
+            String normalizedUsername = normalizeString(request.username);
             if(repository.existsByUsername((normalizedUsername))){
                 throw new CredentialsAlreadyExistException("Username already exists");
             }
@@ -151,7 +148,7 @@ public class UserService {
         }
 
         if(request.email != null && !request.email.isBlank()) {
-            String normalizedEmail = (request.email).toLowerCase().trim();
+            String normalizedEmail = normalizeString(request.email);
             if(repository.existsByEmail(normalizedEmail)){
                 throw new CredentialsAlreadyExistException("Email already exists");
             }
@@ -192,40 +189,38 @@ public class UserService {
 
     public List<BookResponseDto> addToBookList(BookRequestDto dto){
         User user = getCurrentUser();
-        boolean updated = false;
+        Set<Book> booksToAdd = new HashSet<>();
 
         if(dto.bookId != null){
             Book book = bookService.findBookById(dto.bookId);
-            user.addBook(book);
-            updated = true;
+            booksToAdd.add(book);
         }
 
         if(dto.bookIds != null && !dto.bookIds.isEmpty()){
             for(Integer id: dto.bookIds){
                 Book book = bookService.findBookById(id);
-                user.addBook(book);
+                booksToAdd.add(book);
             }
-            updated = true;
         }
 
         if(dto.bookTitle != null && !dto.bookTitle.trim().isEmpty()){
-            String normalizedTitle = dto.bookTitle.toLowerCase();
-            Book book = bookService.findBookByTitle(normalizedTitle);
-            user.addBook(book);
-            updated = true;
+            Book book = bookService.findBookByTitle(normalizeString(dto.bookTitle));
+            booksToAdd.add(book);
         }
 
         if(dto.bookTitles != null && !dto.bookTitles.isEmpty()){
             for(String title: dto.bookTitles){
-                String normalizedTitle = title.toLowerCase();
-                Book book = bookService.findBookByTitle(normalizedTitle);
-                user.addBook(book);
+                Book book = bookService.findBookByTitle(normalizeString(title));
+                booksToAdd.add(book);
             }
-            updated = true;
         }
 
-        if(!updated){
+        if(booksToAdd.isEmpty()){
             throw new IllegalArgumentException("No valid field provided, valid fields include:\nbookId : Integer id\nbookIds: [Integer id]\nbookTitle: String title\nbookTitles: [String titles]");
+        }
+
+        for(Book book: booksToAdd){
+            user.addBook(book);
         }
 
         repository.save(user);
@@ -236,6 +231,57 @@ public class UserService {
     public List<BookResponseDto> getBookListOfCurrent(){
         User user = getCurrentUser();
         return userMapper.getUserBookList(user);
+    }
+
+    public List<BookResponseDto> removeFromBookList(BookRequestDto dto){
+        User user = getCurrentUser();
+        Set<Book> bookList = user.getBooks();
+        Set<Book> booksToRemove = new HashSet<>();
+
+        if(bookList.isEmpty()){
+            throw new NullPointerException("Current book list is empty");
+        }
+
+        if(dto.bookId != null){
+            booksToRemove.add(bookService.findBookById(dto.bookId));
+        }
+
+        if(dto.bookIds != null && !dto.bookIds.isEmpty()){
+            for(Integer id: dto.bookIds){
+                booksToRemove.add(bookService.findBookById(id));
+            }
+        }
+
+        if(dto.bookTitle != null && !dto.bookTitle.trim().isEmpty()){
+            booksToRemove.add(bookService.findBookByTitle(normalizeString(dto.bookTitle)));
+
+        }
+
+        if(dto.bookTitles != null && !dto.bookTitles.isEmpty()){
+            for(String title: dto.bookTitles){
+                booksToRemove.add(bookService.findBookByTitle(normalizeString(title)));
+
+            }
+        }
+
+        if(booksToRemove.isEmpty()){
+            throw new IllegalArgumentException("No valid field provided, valid fields include:\nbookId : Integer id\nbookIds: [Integer id]\nbookTitle: String title\nbookTitles: [String titles]");
+        }
+
+        for(Book book: booksToRemove){
+            if(bookList.contains(book)){
+                bookList.remove(book);
+            }else{
+                throw new NoSuchElementException("Current book list doesn't contain '" + book.getTitle() + "'");
+            }
+        }
+
+        repository.save(user);
+        return userMapper.getUserBookList(user);
+    }
+
+    private String normalizeString(String string) {
+        return string == null ? null : string.trim().toLowerCase();
     }
 
 }

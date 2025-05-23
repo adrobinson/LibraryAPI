@@ -82,7 +82,7 @@ public class BookService {
 
     public Book findBookByTitle(String title) {
         return bookRepository.findBookByTitle(title.toLowerCase().trim())
-                .orElseThrow(() -> new NoSuchElementException("No book with title: " + title));
+                .orElseThrow(() -> new NoSuchElementException("No book with title: '" + title + "'"));
     }
 
 }
