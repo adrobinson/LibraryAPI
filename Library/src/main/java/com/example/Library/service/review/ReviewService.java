@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -41,6 +43,16 @@ public class ReviewService {
 
         reviewRepository.save(review);
         return reviewMapper.toDto(review);
+    }
+
+    public List<ReviewResponseDto> getReviewsForBook(Integer bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NoSuchElementException("Book not found"));
+
+        return reviewRepository.findAllByBook(book)
+                .stream()
+                .map(reviewMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 }
