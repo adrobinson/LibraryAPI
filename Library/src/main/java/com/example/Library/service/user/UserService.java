@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    private static final String ADMIN_USERNAME = "admin";
     private final UserRepository repository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -36,9 +37,11 @@ public class UserService {
 
 
     public UserResponseDto saveUser(UserRegistrationDto dto){
-        if(repository.existsByEmail((dto.email).toLowerCase())){
+        String normalizedEmail = StringUtil.normalizeString(dto.email);
+        String normalizedUsername = StringUtil.normalizeString(dto.username);
+        if(repository.existsByEmail(normalizedEmail)){
             throw new CredentialsAlreadyExistException("Email already exists");
-        } else if(repository.existsByUsername(dto.username)){
+        } else if(repository.existsByUsername(normalizedUsername)){
             throw new CredentialsAlreadyExistException("Username already exists");
         }
 
@@ -73,7 +76,7 @@ public class UserService {
 
     public void updateAdminPassword(UpdatePasswordRequest request) {
         var user = getCurrentUser();
-        if(!Objects.equals(user.getUsername(), "admin")){
+        if(!Objects.equals(user.getUsername(), ADMIN_USERNAME)){
             throw new AccessDeniedException("Only user 'admin' can use this request");
         }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -123,43 +126,15 @@ public class UserService {
     public List<String> updateDetails(UpdateDetailsRequest request){
         User user = getCurrentUser();
 
-        if (Objects.equals(user.getUsername(), "admin")) {
+        if (ADMIN_USERNAME.equals(user.getUsername())) {
             throw new AccessDeniedException("Cannot update this user");
         }
 
-        boolean updated = false;
         List<String> messages = new ArrayList<>();
 
-        if(request.username != null && !request.username.isBlank()) {
-            String normalizedUsername = StringUtil.normalizeString(request.username);
-            if(repository.existsByUsername((normalizedUsername))){
-                throw new CredentialsAlreadyExistException("Username already exists");
-            }
-            if (!normalizedUsername.matches("^\\S+$")) {
-                throw new IllegalArgumentException("Username cannot contain spaces");
-            }
-            String oldUsername = user.getUsername();
-            user.setUsername(normalizedUsername);
-            messages.add("Username updated: " + oldUsername + " -> " + normalizedUsername);
-            updated = true;
-        }
-
-        if(request.email != null && !request.email.isBlank()) {
-            String normalizedEmail = StringUtil.normalizeString(request.email);
-            if(repository.existsByEmail(normalizedEmail)){
-                throw new CredentialsAlreadyExistException("Email already exists");
-            }
-            String oldEmail = user.getEmail();
-            user.setEmail(normalizedEmail);
-            messages.add("Email updated: " + oldEmail + " -> " + normalizedEmail);
-            updated = true;
-        }
-
-        if(request.password != null && !request.password.isBlank()) {
-            user.setPassword(passwordEncoder.encode(request.password));
-            messages.add("Password updated");
-            updated = true;
-        }
+        boolean updated = updateUsernameIfNeeded(user, request.username, messages)
+                | updateEmailIfNeeded(user, request.email, messages)
+                | updatePasswordIfNeeded(user, request.password, messages);
 
         if(!updated){
             throw new IllegalArgumentException("No valid fields provided to update");
@@ -168,6 +143,45 @@ public class UserService {
         repository.save(user);
         return messages;
 
+    }
+
+    private boolean updateUsernameIfNeeded(User user, String newUsername, List<String> messages) {
+        if (newUsername == null || newUsername.isBlank()) return false;
+
+        String normalized = StringUtil.normalizeString(newUsername);
+        if (!normalized.matches("^\\S+$")) {
+            throw new IllegalArgumentException("Username cannot contain spaces");
+        }
+        if (repository.existsByUsername(normalized)) {
+            throw new CredentialsAlreadyExistException("Username already exists");
+        }
+
+        String old = user.getUsername();
+        user.setUsername(normalized);
+        messages.add("Username updated: " + old + " -> " + normalized);
+        return true;
+    }
+
+    private boolean updateEmailIfNeeded(User user, String newEmail, List<String> messages) {
+        if (newEmail == null || newEmail.isBlank()) return false;
+
+        String normalized = StringUtil.normalizeString(newEmail);
+        if (repository.existsByEmail(normalized)) {
+            throw new CredentialsAlreadyExistException("Email already exists");
+        }
+
+        String old = user.getEmail();
+        user.setEmail(normalized);
+        messages.add("Email updated: " + old + " -> " + normalized);
+        return true;
+    }
+
+    private boolean updatePasswordIfNeeded(User user, String newPassword, List<String> messages) {
+        if (newPassword == null || newPassword.isBlank()) return false;
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        messages.add("Password updated");
+        return true;
     }
 
     public UserResponseDto deleteCurrent(){
