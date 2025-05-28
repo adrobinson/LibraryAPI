@@ -9,6 +9,7 @@ import com.example.Library.repository.BookRepository;
 import com.example.Library.repository.ReviewRepository;
 import com.example.Library.service.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,5 +55,19 @@ public class ReviewService {
                 .map(reviewMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    public void deleteUserReview(Integer reviewId) {
+        User currentUser = userService.getCurrentUser();
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("Review not found"));
+
+        if (!review.getUser().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("You can only delete your own reviews");
+        }
+
+        reviewRepository.delete(review);
+    }
+
 
 }
