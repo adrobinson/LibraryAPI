@@ -18,6 +18,17 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    // Admin Endpoints
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/admin/reviews/{reviewId}")
+    public ResponseEntity<?> deleteReviewAsAdmin(@PathVariable Integer reviewId) {
+        reviewService.deleteReviewAsAdmin(reviewId);
+        return ResponseEntity.ok("Review deleted by admin");
+    }
+
+    // User Endpoints
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/review")
     public ResponseEntity<ReviewResponseDto> addReview(@Valid @RequestBody ReviewRequestDto dto) {

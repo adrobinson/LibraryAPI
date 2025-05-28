@@ -69,5 +69,12 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
+    public void deleteReviewAsAdmin(Integer reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("Review not found"));
+
+        reviewRepository.delete(review);
+    }
+
 
 }
