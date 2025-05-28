@@ -1,4 +1,6 @@
 package com.example.Library.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -15,6 +17,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Table(
+        name = "review",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "book_id"}) // user can only review book once
+        }
+)
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +35,11 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "book_id")
     @NotNull
+    @JsonBackReference
     private Book book;
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull
+    @JsonBackReference
     private User user;
 }
